@@ -1,8 +1,9 @@
 "use client";
-import { Car } from "lucide-react";
+
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Header } from "./header";
 import { Social } from "./Social";
+import { BackButton } from "./back-button";
 
 interface CardWrapperProps {
   children: React.ReactNode;
@@ -30,6 +31,9 @@ export const CardWrapper = ({
           <Social />
         </CardFooter>
       )}
+      <CardFooter>
+        <BackButton label={backButtonLabel} href={backButtonHref} />
+      </CardFooter>
     </Card>
   );
 };
