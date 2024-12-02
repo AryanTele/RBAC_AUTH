@@ -6,7 +6,8 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/route";
 import { AuthError } from "next-auth";
 import { generateVerificationToken } from "@/lib/tokens";
 import { getUserByEmail } from "@/data/user";
-import { sendVerificationEmail } from "@/lib/mail";
+import { sendVerificationEmail, sendTwoFactorTokenEmail } from "@/lib/mail";
+import { generateTwoFactorToken } from "@/lib/tokens";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
   // validate at server
@@ -30,6 +31,12 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       verificationToken.token
     );
     return { success: "Confirmation email sent !" };
+  }
+
+  if (existingUser.isTwoFactorEnable && existingUser.email) {
+    const twoFactorToken = await generateTwoFactorToken(existingUser.email);
+    await sendTwoFactorTokenEmail(twoFactorToken.email, twoFactorToken.token);
+    return { twoFactorToken: true };
   }
 
   try {
