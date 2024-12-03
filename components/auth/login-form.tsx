@@ -37,6 +37,7 @@ export const LoginForm = () => {
     defaultValues: {
       email: "",
       password: "",
+      code: "",
     },
   });
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
@@ -47,7 +48,7 @@ export const LoginForm = () => {
         .then((data) => {
           if (data?.error) {
             form.reset();
-            setError(data.error);
+            setError(data?.error);
           }
           if (data?.success) {
             form.reset();
@@ -58,7 +59,10 @@ export const LoginForm = () => {
             setShowTwoFactor(true);
           }
         })
-        .catch(() => setError("Something went wrong!"));
+        .catch((error) => {
+          console.log(error);
+          setError(error + "OOPS! Something went wrong!");
+        });
     });
   };
   return (
