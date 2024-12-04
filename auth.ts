@@ -24,6 +24,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (account?.provider !== "credentials") return true;
 
       const existingUser = await getUserById(user.id!);
+
+      // if user email is not verified don't let user sign in
       if (!existingUser?.emailVerified) return false;
       if (existingUser.isTwoFactorEnable) {
         const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
